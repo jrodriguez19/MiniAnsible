@@ -10,7 +10,6 @@ import paramiko
 # Module to save last command used
 import pickle
 
-
 print('Mini Ansible by GeorgeRN')
 
 # Function to Print Menu for server selection
@@ -23,12 +22,16 @@ def printServersMenu(servers):
         print(i, server)
         i += 1
 
+# Get appropiate credentials for the server
+
 
 def getCredentials(serverName, genericUser=False):
     credentialsKey = servers[serverName][genericUser+1]
     username = credentials[credentialsKey][0]
     password = credentials[credentialsKey][1]
     return (username, password)
+
+# Executes the provided command in the server
 
 
 def runCommandInServer(serverName, commandToExecute, genericUser=False):
@@ -44,7 +47,8 @@ def runCommandInServer(serverName, commandToExecute, genericUser=False):
     del ssh
     return (stdin, stdout, stderr)
 
-# Print servers menu
+
+# Printing servers menu
 printServersMenu(serversMenu)
 print('\u001B[0mSelect the number in which servers do you want to execute the command?')
 serverSelection = input()
