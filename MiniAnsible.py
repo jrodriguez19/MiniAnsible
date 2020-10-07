@@ -23,8 +23,6 @@ def printServersMenu(servers):
         i += 1
 
 # Get appropiate credentials for the server
-
-
 def getCredentials(serverName, genericUser=False):
     credentialsKey = servers[serverName][genericUser+1]
     username = credentials[credentialsKey][0]
@@ -32,8 +30,6 @@ def getCredentials(serverName, genericUser=False):
     return (username, password)
 
 # Executes the provided command in the server
-
-
 def runCommandInServer(serverName, commandToExecute, genericUser=False):
     credentials = getCredentials(serverName, genericUser)
     ip = servers[serverName][0]
@@ -48,27 +44,35 @@ def runCommandInServer(serverName, commandToExecute, genericUser=False):
     return (stdin, stdout, stderr)
 
 
-# Printing servers menu
+# Printing servers menu and ask for options to execute
 printServersMenu(serversMenu)
-print('\u001B[0mSelect the number in which servers do you want to execute the command?')
+print('\u001B[0mType the corresponding number where you want to execute the command')
 serverSelection = input()
+    
 
 serversMenuKeys = tuple(serversMenu.keys())
 groupName = serversMenuKeys[int(serverSelection)]
 serversToWork = serversMenu[groupName]
 
 # Load last command from pickle file
-with open('save.pk', 'rb') as fi:
-    command = pickle.load(fi)
+try:
 
+    with open('save.pk', 'rb') as fi:
+        command = pickle.load(fi)
+except:
+        command = 'No previous commands found'
 # Read command to run from the user
 userEntry = input(
-    'Type the command to execute:\nLast command executed: ' + command + '\n')
+    'Last command executed: ' + command + '\nType the command to execute:\n')
 
 if(userEntry == ''):
     commandToExecute = command
 else:
     commandToExecute = userEntry
+
+# Asking whether to print standard error or not.
+print("\u001B[0mDo you want to visualize the Standard Error Output? type \u001b[34my\u001b[0m for yes, otherwise press \u001b[34mEnter\u001b[0m")
+stdErrorOutput = input()
 
 # Save comand in a pickle file
 with open('save.pk', 'wb') as fi:
@@ -93,11 +97,12 @@ for server in serversToWork:
             print(line, end='')
         print('')
         # Printing standard error
-        print('\u001b[31mStd ERROR:\u001b[0m')
-        stderr = fullOutput[2].readlines()
-        if not stderr:
-            print('empty')
-        else:
-            for line in stderr:
-                print(line, end='')
+        if stdErrorOutput == 'y':            
+            print('\u001b[31mStd ERROR:\u001b[0m')
+            stderr = fullOutput[2].readlines()
+            if not stderr:
+                print('empty')
+            else:
+                for line in stderr:
+                    print(line, end='')
         print('')
