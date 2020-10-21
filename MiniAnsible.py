@@ -13,8 +13,6 @@ import pickle
 print('Mini Ansible by GeorgeRN')
 
 # Function to Print Menu for server selection
-
-
 def printServersMenu(servers):
     i = 0
     for server in servers.keys():
@@ -87,11 +85,11 @@ for server in serversToWork:
     fullOutput = runCommandInServer(server, commandToExecute, False)
     stdout = fullOutput[1].readlines()
     # Printing outputs from servers
-    print('Server: ' + server)
+    print('\u001B[32mServer: ' + server)
     # Printing standard output
     print('\u001b[34mStd OUTPUT:\u001b[0m')
     if not stdout:
-        print('empty')
+        print('empty\n')
     else:
         for line in stdout:
             print(line, end='')
@@ -101,7 +99,7 @@ for server in serversToWork:
             print('\u001b[31mStd ERROR:\u001b[0m')
             stderr = fullOutput[2].readlines()
             if not stderr:
-                print('empty')
+                print('empty\n')
             else:
                 for line in stderr:
                     print(line, end='')
